@@ -2,7 +2,7 @@
 
 > 基于 Vue 的一个轻量级视频播放组件，适配 PC 和移动端
 
-[DEMO 演示](https://github.com/webweifeng/vue-mini-player)
+![avatar](./preview.png)
 
 ## 安装
 
