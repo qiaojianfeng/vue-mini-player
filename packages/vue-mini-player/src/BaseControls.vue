@@ -1,8 +1,8 @@
 <template>
   <div class="qun-base-controls">
     <Volume :isMuted.sync="isMuted" />
-    <Progress />
-    <Fullscreen />
+    <Progress @paused="$emit('paused')" />
+    <Fullscreen :isFullscreen.sync="isFullscreen" />
   </div>
 </template>
 <script>
@@ -22,14 +22,18 @@ export default {
       isFullscreen: false
     };
   },
-  watch: {},
-  computed: {},
-  filters: {},
-  methods: {
-    handleClickVol() {},
-    handleClickSlider() {},
-    handleClickFullscreen() {}
+  watch: {
+    isFullscreen(newData, oldData) {
+      this.$emit('fullscreen', newData);
+    }
   },
+  computed: {
+    $video() {
+      return this.$parent.$video;
+    }
+  },
+  filters: {},
+  methods: {},
   created() {},
   mounted() {},
   updated() {},

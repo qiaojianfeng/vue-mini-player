@@ -5,7 +5,7 @@ import App from './App.vue';
 import VueMiniPlayer from '../packages/index';
 // 注册组件库
 Vue.use(VueMiniPlayer);
-
+Vue.use(require('vue-titles'));
 Vue.config.productionTip = false;
 
 new Vue({

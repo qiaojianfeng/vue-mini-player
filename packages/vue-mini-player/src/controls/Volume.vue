@@ -1,6 +1,6 @@
 <template>
   <div class="_vol"
-       @click="handleClick">
+       @click.stop="handleClick">
     <!-- 非静音 -->
     <svg v-if="isMuted"
          viewBox="0 0 40 40"

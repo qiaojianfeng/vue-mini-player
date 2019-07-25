@@ -1,6 +1,12 @@
 <template>
   <div class="qun-video">
+    <VueMiniPlayer ref="vueMiniPlayer"
+                   :mutex="true"
+                   :video="video"
+                   @fullscreen="fullscreen" />
     <VueMiniPlayer :video="video" />
+    <VueMiniPlayer :video="video" />
+
   </div>
 </template>
 <script>
@@ -15,9 +21,19 @@ export default {
     };
   },
   watch: {},
-  computed: {},
+  computed: {
+    $video() {
+      return this.$refs.vueMiniPlayer.$video;
+    }
+  },
   filters: {},
-  methods: {},
+  methods: {
+    fullscreen(data) {
+      console.log('====================================');
+      console.log(data);
+      console.log('====================================');
+    }
+  },
   created() {},
   mounted() {},
   updated() {},

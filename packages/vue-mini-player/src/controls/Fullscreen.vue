@@ -1,6 +1,6 @@
 <template>
   <div class="_fullscreen"
-       @click="handleClickToggle">
+       @click.stop="handleClickToggle">
     <svg viewBox="0 0 40 40"
          version="1.1"
          xmlns="http://www.w3.org/2000/svg"
@@ -25,10 +25,14 @@
 
 <script>
 export default {
+  props: {
+    isFullscreen: {
+      type: Boolean,
+      default: false
+    }
+  },
   data() {
-    return {
-      isFullscreen: false
-    };
+    return {};
   },
   computed: {
     $video() {
@@ -50,7 +54,7 @@ export default {
     setFullscreenState() {
       const fullEle =
         document.fullscreenElement || document.mozFullScreenElement || document.msFullscreenElement || document.webkitFullscreenElement;
-      this.isFullscreen = !!fullEle;
+      this.$emit('update:isFullscreen', !!fullEle);
     },
     reqFullScreen(element) {
       if (element.requestFullscreen) {

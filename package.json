@@ -1,11 +1,17 @@
 {
   "name": "vue-mini-player",
-  "author": "845882161@qq.com",
+  "author": "qiaojianfeng<845882161@qq.com>",
   "description": "基于 Vue 一个轻量级视频播放器",
   "main": "lib/vue-mini-player.umd.min.js",
-  "keyword": "vue-mini-player vue-player player",
-  "version": "0.1.0",
+  "keyword": "vue-mini-player vue-player player video",
+  "version": "0.1.2",
   "private": false,
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/webweifeng/vue-mini-player"
+  },
+  "bugs": "https://github.com/webweifeng/vue-mini-player/issues",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
@@ -15,7 +21,8 @@
   },
   "dependencies": {
     "core-js": "^2.6.5",
-    "vue": "^2.6.10"
+    "vue": "^2.6.10",
+    "vue-titles": "^1.1.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.9.0",

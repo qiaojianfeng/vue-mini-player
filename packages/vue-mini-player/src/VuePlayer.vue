@@ -1,9 +1,12 @@
 <template>
   <div class="qun-player"
-       ref="container">
+       ref="container"
+       @click.stop="isClearMode=!isClearMode">
+    <!--模拟poster -->
     <div class="_poster"
          :style="{backgroundImage:`url(${options.cover})`}"
-         v-show="!isPlaying&&isStart"></div>
+         v-show="!isPlaying&&isStart">
+    </div>
     <template v-show="isPlaying">
       <video class="_video-ref"
              webkit-playsinline
@@ -19,8 +22,15 @@
                 :type="`audio/${getUrlType(item)}`">
         Your browser does not support the video element.
       </video>
-      <PlayBtn :isPlaying.sync="isPlaying" />
-      <BaseControls />
+      <transition name="fade">
+        <PlayBtn :isPlaying.sync="isPlaying"
+                 v-show="!isClearMode" />
+      </transition>
+      <transition name="fade">
+        <BaseControls @paused="handlePaused"
+                      @fullscreen="$emit('fullscreen',$event)"
+                      v-show="!isClearMode" />
+      </transition>
     </template>
   </div>
 </template>
@@ -41,6 +51,10 @@ export default {
       default: function() {
         return {};
       }
+    },
+    mutex: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -48,8 +62,6 @@ export default {
       baseVideo: {
         url: '',
         cover: '',
-        width: '100%',
-        height: '200px',
         muted: false,
         loop: false,
         preload: 'auto',
@@ -59,14 +71,17 @@ export default {
       },
       $video: null,
       $container: null,
+      clearModeTimer: null,
       isStart: true,
-      isPlaying: false
+      isPlaying: false,
+      isClearMode: false
     };
   },
   watch: {
     isPlaying() {
       this.isStart = false;
       this.play();
+      this.setClearModeTimer();
     }
   },
   computed: {
@@ -87,36 +102,59 @@ export default {
   },
   methods: {
     getUrlType(url) {
-      return url.match(/[^\.]+$/);
+      return url.match(/[^\.]+(?=\?)/);
     },
     init() {
       this.$video = this.$refs.video;
       this.$container = this.$refs.container;
       this.initPlayer();
       if (this.options.autoplay) this.play();
-      // document.body.addEventListener('mousemove', this.mouseMoveAction, false);
-      // document.body.addEventListener('mouseup', this.mouseUpAction, false);
-      // document.body.addEventListener('keydown', this.keydownAction, false);
-      window.addEventListener('resize', this.resizeAction, false);
+      this.$emit('ready');
     },
     initPlayer() {
-      const vol = this.options.volume;
-      this.$video.volume = vol;
+      this.$video.volume = this.options.volume;
+    },
+    setClearModeTimer() {
+      if (this.clearModeTimer) {
+        clearTimeout(this.clearModeTimer);
+      }
+      this.clearModeTimer = setTimeout(() => {
+        this.isClearMode = true;
+        this.$emit('clearMode');
+      }, 3000);
+    },
+    pauseAllVideo() {
+      if (this.mutex) {
+        const videos = document.querySelectorAll('video');
+        videos.forEach(v => {
+          v.pause && v.pause();
+        });
+      }
     },
     play() {
       if (this.isPlaying) {
+        this.pauseAllVideo();
         this.$video.play();
       } else {
         this.$video.pause();
       }
+      this.$emit('videoPlay', this.isPlaying);
+    },
+    handlePaused() {
+      console.log('====================================');
+      console.log('paused');
+      console.log('====================================');
+      this.isPlaying = false;
     }
   },
   created() {
+    this.$emit('created');
     this.$nextTick(() => {
       this.init();
     });
   },
   mounted() {
+    this.$emit('mounted');
     console.log(
       '\n' + ' %c vue-mini-player v' + VERSION + ' %c https://github.com/webweifeng/vue-mini-player ' + '\n' + '\n',
       'color: #fadfa3; background: #030307; padding:5px 0;',
@@ -124,14 +162,19 @@ export default {
     );
   },
   updated() {},
-  beforeDestroy() {},
-  destroyed() {}
+  beforeDestroy() {
+    this.$emit('beforeDestroy');
+  },
+  destroyed() {
+    this.$emit('destroyed');
+  }
 };
 </script>
 <style lang="scss" scoped>
 .qun-player {
   width: 100%;
   height: 100%;
+  min-height: 10em;
   position: relative;
   background: #000;
   overflow: hidden;
@@ -166,6 +209,13 @@ export default {
       display: none !important;
     }
   }
+}
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
 }
 </style>
 

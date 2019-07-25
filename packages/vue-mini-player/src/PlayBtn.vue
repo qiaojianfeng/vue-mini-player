@@ -1,6 +1,6 @@
 <template>
   <div class="_play-btn"
-       @click="handleClick">
+       @click.stop="handleClick">
     <svg v-if="isPlaying"
          viewBox="0 0 64 64"
          version="1.1"
@@ -76,6 +76,7 @@ export default {
   transform: translate(-50%, -50%);
   width: 3.5em;
   height: 3.5em;
+  user-select: none;
   cursor: pointer;
   svg {
     width: 100%;
