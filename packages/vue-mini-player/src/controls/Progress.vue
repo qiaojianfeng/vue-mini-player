@@ -1,18 +1,11 @@
 <template>
-  <div class="_progress"
-       @click.stop>
-    <span class="_time-current">{{textCurrentTime}}</span>
-    <div class="_slider"
-         ref="_sliderRef"
-         @click.stop="clickSlider">
-      <div class="_slider-cur"
-           :style="{width:offsetLeft}"></div>
-      <i class="_slider-btn"
-         @click.stop
-         :style="{left:offsetLeft}"
-         ref="_sliderBtnRef"></i>
+  <div class="_progress" @click.stop>
+    <span class="_time-current">{{ textCurrentTime }}</span>
+    <div class="_slider" ref="_sliderRef" @click.stop="clickSlider">
+      <div class="_slider-cur" :style="{ width: offsetLeft }"></div>
+      <i class="_slider-btn" @click.stop :style="{ left: offsetLeft }" ref="_sliderBtnRef"></i>
     </div>
-    <span class="_time-amount">{{textTotalTime}}</span>
+    <span class="_time-amount">{{ textTotalTime }}</span>
   </div>
 </template>
 
@@ -170,9 +163,6 @@ export default {
     this.$nextTick(() => {
       this.initVideoEvents();
       this.initSliderBtnEvents();
-      setTimeout(() => {
-        alert(this.$video.duration);
-      }, 3000);
     });
   }
 };
@@ -225,4 +215,3 @@ export default {
   }
 }
 </style>
-
