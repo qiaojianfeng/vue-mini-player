@@ -2,7 +2,7 @@
   <div class="_vol"
        @click.stop="handleClick">
     <!-- 非静音 -->
-    <svg v-if="isMuted"
+    <svg v-if="!isMuted"
          viewBox="0 0 40 40"
          version="1.1"
          xmlns="http://www.w3.org/2000/svg"
@@ -75,8 +75,9 @@ export default {
   },
   methods: {
     handleClick() {
-      this.$emit('update:isMuted', !this.isMuted);
-      this.$video && (this.$video.muted = this.isMuted);
+      const isMuted = !this.isMuted;
+      this.$emit('update:isMuted', isMuted);
+      this.$video && (this.$video.muted = isMuted);
     }
   }
 };

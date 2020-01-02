@@ -80,7 +80,7 @@ export default {
       this.playerRef.isPlaying = true;
     },
     initVideoEvents() {
-      const events = ['pause', 'play', 'waiting', 'timeupdate', 'durationchange'];
+      const events = ['pause', 'play', 'waiting', 'timeupdate', 'durationchange', 'loadeddata'];
       events.forEach(e => {
         this.$video.addEventListener(e, this[`handle${e.toLowerCase().replace(/^./, f => f.toUpperCase())}`], false);
       });
@@ -95,6 +95,10 @@ export default {
         const bindRef = key === 'DragStart' ? this.$refs._sliderBtnRef : this.playerRef.$container;
         bindRef.addEventListener(dragEventMap[key], this[`handle${key}`], false);
       });
+    },
+    handleLoadeddata() {
+      const totalTime = this.$video.duration;
+      this.textTotalTime = this.secondToTime(totalTime);
     },
     handleDurationchange() {
       // 视频读取完成拿到视频长度
@@ -166,6 +170,9 @@ export default {
     this.$nextTick(() => {
       this.initVideoEvents();
       this.initSliderBtnEvents();
+      setTimeout(() => {
+        alert(this.$video.duration);
+      }, 3000);
     });
   }
 };

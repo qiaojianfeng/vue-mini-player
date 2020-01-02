@@ -4,7 +4,7 @@
   "description": "基于 Vue 一个轻量级视频播放器",
   "main": "lib/vue-mini-player.umd.min.js",
   "keyword": "vue-mini-player vue-player player video",
-  "version": "0.1.2",
+  "version": "0.1.4",
   "private": false,
   "license": "MIT",
   "repository": {

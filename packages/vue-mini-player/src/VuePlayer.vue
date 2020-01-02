@@ -12,14 +12,18 @@
              webkit-playsinline
              playsinline
              x5-video-player-fullscreen
+             x-webkit-airplay="allow"
+             x5-video-player-type="h5"
              crossorigin="anonymous"
              ref="video"
-             preload="auto"
+             :muted="options.muted"
+             :loop="options.loop"
+             :preload="options.preload"
              :poster="options.cover">
         <source v-for="(item, index) in vUrl"
                 :key="index"
                 :src="item"
-                :type="`audio/${getUrlType(item)}`">
+                :type="`video/${getUrlType(item)}`">
         Your browser does not support the video element.
       </video>
       <transition name="fade">
@@ -62,9 +66,9 @@ export default {
       baseVideo: {
         url: '',
         cover: '',
-        muted: false,
+        muted: true,
         loop: false,
-        preload: 'auto',
+        preload: 'metadata',
         poster: '',
         volume: 1,
         autoplay: false
@@ -102,17 +106,25 @@ export default {
   },
   methods: {
     getUrlType(url) {
-      return url.match(/[^\.]+(?=\?)/);
+      let u = url.split('?')[0] + '?v=1';
+      return u.match(/[^\.]+(?=\?)/) || 'mp4';
     },
     init() {
       this.$video = this.$refs.video;
       this.$container = this.$refs.container;
+      this.isPlaying = true;
+      this.$video.load();
       this.initPlayer();
-      if (this.options.autoplay) this.play();
       this.$emit('ready');
+      setTimeout(() => {
+        this.isPlaying = this.options.autoplay;
+      }, 300);
     },
     initPlayer() {
       this.$video.volume = this.options.volume;
+      setTimeout(() => {
+        this.$video.muted = false;
+      }, 500);
     },
     setClearModeTimer() {
       if (this.clearModeTimer) {
@@ -141,9 +153,6 @@ export default {
       this.$emit('videoPlay', this.isPlaying);
     },
     handlePaused() {
-      console.log('====================================');
-      console.log('paused');
-      console.log('====================================');
       this.isPlaying = false;
     }
   },
@@ -153,6 +162,7 @@ export default {
       this.init();
     });
   },
+
   mounted() {
     this.$emit('mounted');
     console.log(

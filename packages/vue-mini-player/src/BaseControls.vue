@@ -18,7 +18,7 @@ export default {
   },
   data() {
     return {
-      isMuted: true,
+      isMuted: false,
       isFullscreen: false
     };
   },
@@ -28,14 +28,27 @@ export default {
     }
   },
   computed: {
+    $parentComponent() {
+      return this.$parent;
+    },
     $video() {
-      return this.$parent.$video;
+      return this.$parentComponent.$video;
     }
   },
   filters: {},
-  methods: {},
+  methods: {
+    initVideoEvents() {
+      this.$video.addEventListener('volumechange', function(e) {
+        this.isMuted = e.target.muted;
+      });
+    }
+  },
   created() {},
-  mounted() {},
+  mounted() {
+    this.$nextTick(() => {
+      this.initVideoEvents();
+    });
+  },
   updated() {},
   beforeDestroy() {},
   destroyed() {}
