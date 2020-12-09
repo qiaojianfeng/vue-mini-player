@@ -1,8 +1,9 @@
-# vue-mini-player
-
+<h1 align="center">
+  <a href="https://webweifeng.github.io/vue-mini-player/">
+  <img src="./logo.png" width="250"/></a>
+  <br>
+</h1>
 > 基于 Vue 的一个轻量级视频播放组件，适配 PC 和移动端
-
-![avatar](./preview.jpg)
 
 ## 安装
 
@@ -57,7 +58,7 @@ Vue.use(vueMiniPlayer)
 
 ## 💡 特色
 
-1.轻量级 `HTML5` 播放器，精美 `UI` 控件，简单易上手 `Gzip` 压缩不足 `10k`
+1.轻量级 `HTML5` 播放器，精美 `UI` 控件，简单易上手
 
 2.提供以 `npm` 的形式安装提供全局组件
 
@@ -76,18 +77,22 @@ Vue.use(vueMiniPlayer)
 
 ## ✈️ 参数
 
-| 名称           | 默认值 | 描述                                                         |
-| -------------- | ------ | ------------------------------------------------------------ |
-| mutex          | false  | 互斥，阻止多个播放器同时播放，当前播放器播放时暂停其他播放器 |
-| video          | -      | 视频相关参数                                                 |
-| video.url      | -      | 视频播放源，支持 Array 形式传入多种视频格式                  |
-| video.cover    | -      | 视频海报                                                     |
-| video.muted    | false  | 是否静音播放                                                 |
-| video.loop     | false  | 视频是否循环播放                                             |
-| video.preload  | 'auto' | 视频预加载，可选值: 'none', 'metadata', 'auto'               |
-| video.poster   | -      | 原生视频默认海报暂不设置，只设置 video.cover                 |
-| video.volume   | 1      | 默认音量                                                     |
-| video.autoplay | false  | 视频自动播放                                                 |
+| 名称              | 默认值 | 类型          | 描述                                                         |
+| ----------------- | ------ | ------------- | ------------------------------------------------------------ |
+| video             | -      |               | 视频相关参数                                                 |
+| mutex             | false  | Boolean       | 互斥，阻止多个播放器同时播放，当前播放器播放时暂停其他播放器 |
+| video.url         | -      | String,Array  | 视频播放源，支持 Array 形式传入多种视频格式                  |
+| video.cover       | -      | String        | 视频海报                                                     |
+| video.muted       | false  | Boolean       | 是否静音播放                                                 |
+| video.loop        | false  | Boolean       | 视频是否循环播放                                             |
+| video.preload     | 'auto' | String        | 视频预加载，可选值: 'none', 'metadata', 'auto'               |
+| video.poster      | -      | String        | 原生视频默认海报暂不设置，只设置 video.cover                 |
+| video.volume      | 1      | String,Number | 默认音量                                                     |
+| video.autoplay    | false  | Boolean       | 视频自动播放                                                 |
+| video.playsinline | false  | Boolean       | 视频行内播报                                                 |
+| video.crossOrigin | false  | String        | 视频源跨域 corss 可选值: 'anonymous', 'use-credentials'      |
+| video.logo        | -      | String        | 播放器 logo                                                  |
+| video.logoStyle   | -      | Object,String | 播放器 logo 样式，参数格式为{color:'#fff'} or "color:#fff"   |
 
 ## 🚀 事件
 

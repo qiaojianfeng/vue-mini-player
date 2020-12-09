@@ -12,9 +12,12 @@ export default {
   data() {
     return {
       video: {
-        url: 'https://api.dogecloud.com/player/get.mp4?vcode=5ac682e6f8231991&userId=17&ext=.mp4',
+        url: 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4',
         loop: true,
-        autoplay: false
+        autoplay: false,
+        muted: true,
+        playsinline: true,
+        logo: 'VMPlayer'
         // cover: 'https://i.loli.net/2019/06/06/5cf8c5d9c57b510947.png'
       }
     };

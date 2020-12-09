@@ -1,41 +1,41 @@
 <template>
-  <div class="qun-player"
+  <div class="vm-player"
        ref="container"
-       @click.stop="isClearMode=!isClearMode">
+       @click.stop="handleClickVideo">
+    <!-- logo -->
+    <div class="_logo" v-if="options.logo" :style="logoStyle">
+      {{options.logo}}
+    </div>
     <!--模拟poster -->
     <div class="_poster"
          :style="{backgroundImage:`url(${options.cover})`}"
-         v-show="!isPlaying&&isStart">
+         v-show="!isPlaying&&isStart && options.cover">
     </div>
     <template v-show="isPlaying">
       <video class="_video-ref"
-             webkit-playsinline
-             playsinline
-             x5-video-player-fullscreen
-             x-webkit-airplay="allow"
-             x5-video-player-type="h5"
-             crossorigin="anonymous"
              ref="video"
              :muted="options.muted"
              :loop="options.loop"
              :preload="options.preload"
-             :poster="options.cover">
+             :poster="options.cover"
+             :autoplay="options.autoplay"
+            >
         <source v-for="(item, index) in vUrl"
                 :key="index"
                 :src="item"
                 :type="`video/${getUrlType(item)}`">
         Your browser does not support the video element.
       </video>
-      <transition name="fade">
-        <PlayBtn :isPlaying.sync="isPlaying"
-                 v-show="!isClearMode" />
-      </transition>
-      <transition name="fade">
-        <BaseControls @paused="handlePaused"
-                      @fullscreen="$emit('fullscreen',$event)"
-                      v-show="!isClearMode" />
-      </transition>
     </template>
+    <transition name="fade">
+      <PlayBtn :isPlaying.sync="isPlaying"
+                v-show="!isClearMode" />
+    </transition>
+    <transition name="fade">
+      <BaseControls @paused="handlePaused"
+                    @fullscreen="$emit('fullscreen',$event)"
+                    v-show="!isClearMode" />
+    </transition>
   </div>
 </template>
 <script>
@@ -68,7 +68,7 @@ export default {
         cover: '',
         muted: true,
         loop: false,
-        preload: 'metadata',
+        preload: 'auto',
         poster: '',
         volume: 1,
         autoplay: false
@@ -102,6 +102,21 @@ export default {
     // 合并默认和用户自定义属性配置
     options() {
       return Object.assign({}, this.baseVideo, this.video);
+    },
+    playsinline() {
+      return this.options.playsinline
+    },
+    crossOrigin() {
+      return this.options.crossOrigin
+    },
+    autoplay() {
+      return this.options.autoplay
+    },
+    isMobile() {
+      return navigator.userAgent.toLowerCase().match(/(ipod|iphone|android|coolpad|mmp|smartphone|midp|wap|xoom|symbian|j2me|blackberry|wince)/i) != null;
+    },
+    logoStyle() {
+      return this.options.logoStyle || {}
     }
   },
   methods: {
@@ -112,19 +127,33 @@ export default {
     init() {
       this.$video = this.$refs.video;
       this.$container = this.$refs.container;
-      this.isPlaying = true;
       this.$video.load();
       this.initPlayer();
       this.$emit('ready');
-      setTimeout(() => {
-        this.isPlaying = this.options.autoplay;
-      }, 300);
     },
     initPlayer() {
       this.$video.volume = this.options.volume;
-      setTimeout(() => {
-        this.$video.muted = false;
-      }, 500);
+      if (this.playsinline) {
+        this.$refs.video.setAttribute('playsinline', this.playsinline)
+        this.$refs.video.setAttribute('webkit-playsinline', this.playsinline)
+        this.$refs.video.setAttribute('x5-playsinline', this.playsinline)
+        this.$refs.video.setAttribute('x5-video-player-type', 'h5')
+        this.$refs.video.setAttribute('x-webkit-airplay', 'allow')
+        this.$refs.video.setAttribute('x5-video-player-fullscreen', false)
+      }
+      // cross origin
+      if (this.crossOrigin) {
+        this.$refs.video.crossOrigin = this.crossOrigin
+        this.$refs.video.setAttribute('crossOrigin', this.crossOrigin)
+      }
+      if (this.autoplay && this.isMobile) {
+        this.$video.muted = true
+        // 兼容微信自动播放
+        document.addEventListener('WeixinJSBridgeReady', () => this.$video.play(), false);
+      }
+      if (this.autoplay) {
+        this.isPlaying = true;
+      }
     },
     setClearModeTimer() {
       if (this.clearModeTimer) {
@@ -132,6 +161,7 @@ export default {
       }
       this.clearModeTimer = setTimeout(() => {
         this.isClearMode = true;
+        this.clearModeTimer = null
         this.$emit('clearMode');
       }, 3000);
     },
@@ -145,15 +175,23 @@ export default {
     },
     play() {
       if (this.isPlaying) {
-        this.pauseAllVideo();
         this.$video.play();
       } else {
+        this.pauseAllVideo();
         this.$video.pause();
       }
       this.$emit('videoPlay', this.isPlaying);
     },
     handlePaused() {
       this.isPlaying = false;
+    },
+    handleClickVideo() {
+      if (this.isClearMode) {
+        this.isClearMode = false;
+        this.setClearModeTimer()
+      } else {
+        this.isClearMode = true;
+      }
     }
   },
   created() {
@@ -162,7 +200,6 @@ export default {
       this.init();
     });
   },
-
   mounted() {
     this.$emit('mounted');
     console.log(
@@ -181,7 +218,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.qun-player {
+.vm-player {
   width: 100%;
   height: 100%;
   min-height: 10em;
@@ -218,6 +255,16 @@ export default {
     &::-webkit-media-controls-enclosure {
       display: none !important;
     }
+  }
+  ._logo{
+    position: absolute;
+    z-index: 2147483647;
+    right: 20px;
+    top: 20px;
+    font-weight: bold;
+    font-family:cursive;
+    text-shadow:6px 2px 2px #666;
+    color:#fff;
   }
 }
 .fade-enter-active,

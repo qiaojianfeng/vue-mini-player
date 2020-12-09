@@ -77,6 +77,7 @@ export default {
   width: 3.5em;
   height: 3.5em;
   user-select: none;
+  z-index: 2147483647;
   cursor: pointer;
   svg {
     width: 100%;

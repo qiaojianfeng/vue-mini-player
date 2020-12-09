@@ -43,9 +43,10 @@ export default {
       });
     }
   },
-  created() {},
-  mounted() {
+  created() {
     this.$nextTick(() => {
+      const { volume } = this.$video
+      this.isMuted = this.$video.muted || volume === 0
       this.initVideoEvents();
     });
   },
